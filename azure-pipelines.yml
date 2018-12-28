@@ -1,0 +1,23 @@
+trigger:
+  - master
+resources:
+  containers:
+    - container: luatex
+      image: kageshiron/pandoc
+pool:
+  vmImage: 'ubuntu-16.04'
+container: luatex
+steps:
+- task: ShellScript@2
+  inputs:
+    scriptPath: build.sh
+- task: CopyFiles@2
+  inputs:
+    contents: |
+      dist/**
+      src/**
+    targetFolder: $(Build.ArtifactStagingDirectory)
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: $(Build.ArtifactStagingDirectory)
+    artifactName: MyBuildOutputs
